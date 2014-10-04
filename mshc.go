@@ -44,6 +44,8 @@ type Entry struct {
 	Date		time.Time
 	MSHC	string
 	File		string
+
+	Children	[]*Entry
 }
 
 var entries []*Entry
@@ -166,4 +168,5 @@ func main() {
 		parseCAB(cab, workdir)
 	}
 	collectByID()
+	assignChildren()
 }
