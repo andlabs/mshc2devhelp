@@ -48,6 +48,7 @@ type Entry struct {
 	File		string
 
 	Children	[]*Entry
+	Dest		string
 }
 
 var entries []*Entry
@@ -176,11 +177,12 @@ func main() {
 	if err != nil {
 		panic(err)		// TODO
 	}
-	for _, cab := range os.Args[1:] {
+	for _, cab := range os.Args[2:] {
 		parseCAB(cab, workdir)
 	}
 	collectByID()
 	assignChildren()
 	sortChildren()
-	buildDevhelp()
+	buildDestinationFolder(os.Args[1])
+	buildDevhelp(os.Args[1])
 }

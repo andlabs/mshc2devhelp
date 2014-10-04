@@ -1,11 +1,6 @@
 // 4 october 2014
 package main
 
-import (
-	"encoding/xml"
-"fmt"
-)
-
 type Book struct {
 	XMLNS		string		`xml:"xmlns,attr"`
 	Title			string		`xml:"title,attr"`
@@ -13,7 +8,7 @@ type Book struct {
 	Author		string		`xml:"author,attr"`
 	Name		string		`xml:"name,attr"`
 	Version		string		`xml:"version,attr"`
-	Langauge		string		`xml:"language,attr"`
+	Language		string		`xml:"language,attr"`
 	Chapters		Chapters		`xml:"chapters"`
 }
 
@@ -44,11 +39,9 @@ func toSub(entry *Entry) *Sub {
 	return s
 }
 
-func buildDevhelp() {
+func buildDevhelp(bookname string) {
+	book.Name = bookname
 	for _, e := range toplevels {
 		book.Chapters.Sub = append(book.Chapters.Sub, toSub(e))
 	}
-b, err := xml.MarshalIndent(book, "", "\t")
-if err != nil { panic(err) }
-fmt.Printf("%s\n", b)
 }
