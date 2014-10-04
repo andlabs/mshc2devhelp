@@ -7,6 +7,7 @@ import (
 	"io"
 	"archive/zip"
 	"path/filepath"
+	"strings"
 	"strconv"
 	"time"
 	"unsafe"
@@ -126,14 +127,18 @@ func parseMSHC(mshcname string) {
 	}
 	defer z.Close()
 	for _, f := range z.File {
-		if e := filepath.Ext(f.Name); e != ".htm" {
+		if !strings.HasPrefix(f.Name, "ic") && filepath.Ext(f.Name) != ".htm" {
 			continue
 		}
 		r, err := f.Open()
 		if err != nil {
 			panic(err)		// TODO
 		}
-		parseEntry(r, mshcname, f.Name)
+		if strings.HasPrefix(f.Name, "ic") {
+			addAsset(mshcname, f.Name, r)
+		} else {
+			parseEntry(r, mshcname, f.Name)
+		}
 		r.Close()
 	}
 }

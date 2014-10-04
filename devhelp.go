@@ -7,29 +7,31 @@ import (
 )
 
 type Book struct {
-	XMLNS	string		`xml:"xmlns,attr"`
-	Title		string		`xml:"title,attr"`
-	Link		string		`xml:"link,attr"`
-	Author	string		`xml:"author,attr"`
-	Name	string		`xml:"name,attr"`
-	Version	string		`xml:"version,attr"`
-	Chapters	Chapters		`xml:"chapters"`
+	XMLNS		string		`xml:"xmlns,attr"`
+	Title			string		`xml:"title,attr"`
+	Link			string		`xml:"link,attr"`
+	Author		string		`xml:"author,attr"`
+	Name		string		`xml:"name,attr"`
+	Version		string		`xml:"version,attr"`
+	Langauge		string		`xml:"language,attr"`
+	Chapters		Chapters		`xml:"chapters"`
 }
 
 type Chapters struct {
-	Sub		[]*Sub		`xml:"sub"`
+	Sub			[]*Sub		`xml:"sub"`
 }
 
 type Sub struct {
-	Name	string		`xml:"name,attr"`
-	Link		string		`xml:"link,attr"`
-	Sub		[]*Sub		`xml:"sub"`
+	Name		string		`xml:"name,attr"`
+	Link			string		`xml:"link,attr"`
+	Sub			[]*Sub		`xml:"sub"`
 }
 
 var book = &Book{
-	XMLNS:	"http://www.devhelp.net/book",
-	Title:		"Windows Desktop App Development",		// TODO
-	Version:	"2",
+	XMLNS:		"http://www.devhelp.net/book",
+	Title:			"Windows Desktop App Development",		// TODO
+	Version:		"2",
+	Language:	"c",
 }
 
 func toSub(entry *Entry) *Sub {
