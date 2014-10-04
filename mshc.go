@@ -7,6 +7,7 @@ import (
 	"io"
 	"archive/zip"
 	"path/filepath"
+	"strconv"
 	"time"
 	"unsafe"
 	"io/ioutil"
@@ -40,7 +41,7 @@ type Entry struct {
 	Book		string
 	ID		string
 	Parent	string
-	Order	string		// zero-based
+	Order	int
 	Date		time.Time
 	MSHC	string
 	File		string
@@ -75,7 +76,9 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 
 			var where *string
 			var what string
+			var order string
 			var date string
+			var err error
 
 			for _, a := range tok.Attr {
 				if a.Key == "name" {
@@ -89,7 +92,7 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 					case "Microsoft.Help.TocParent":
 						where = &e.Parent
 					case "Microsoft.Help.TocOrder":
-						where = &e.Order
+						where = &order
 					case "Microsoft.Help.TopicPublishDate":
 						where = &date
 					}
@@ -99,9 +102,12 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 			}
 			if where != nil {
 				*where = what
+			} else if where == &order {
+				e.Order, err = strconv.Atoi(order)
+				if err != nil {
+					panic(err)		// TODO
+				}
 			} else if where == &date {
-				var err error
-
 				e.Date, err = time.Parse(time.RFC1123, date)
 				if err != nil {
 					panic(err)		// TODO
@@ -169,4 +175,5 @@ func main() {
 	}
 	collectByID()
 	assignChildren()
+	sortChildren()
 }

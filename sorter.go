@@ -1,6 +1,10 @@
 // 3 october 2014
 package main
 
+import (
+	"sort"
+)
+
 var byID = make(map[string]*Entry)
 
 func collectByID() {
@@ -34,5 +38,17 @@ func assignChildren() {
 	for _, e := range toplevels {
 		println(e.Name + " | " + e.Parent)
 		println("")
+	}
+}
+
+type sortEntries []*Entry
+
+func (s sortEntries) Len() int { return len(s) }
+func (s sortEntries) Less(i, j int) bool { return s[i].Order < s[j].Order }
+func (s sortEntries) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+
+func sortChildren() {
+	for _, e := range entries {
+		sort.Sort(sortEntries(e.Children))
 	}
 }
