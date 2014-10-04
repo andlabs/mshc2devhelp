@@ -46,11 +46,12 @@ type Entry struct {
 	File		string
 }
 
-var entries []Entry
+var entries []*Entry
 
 func parseEntry(r io.Reader, mshcname string, filename string) {
-	var e Entry
+	var e *Entry
 
+	e = new(Entry)
 	e.MSHC = mshcname
 	e.File = filename
 	t := html.NewTokenizer(r)
