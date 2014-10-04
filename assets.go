@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"bytes"
 	"path/filepath"
+	"strings"
 )
 
 type Asset struct {
@@ -36,7 +37,9 @@ func addAsset(mshcname string, name string, r io.Reader) {
 
 func copyAssets(dir string) {
 	for name, a := range assets {
-		f, err := os.Create(filepath.Join(dir, name))
+		// annoyingly the actual <img src="..."> values in the HTML use uppercase
+		// TODO if we rewrite HTML in the future, avoid this
+		f, err := os.Create(filepath.Join(dir, strings.ToUpper(name)))
 		if err != nil {
 			panic(err)		// TODO
 		}
