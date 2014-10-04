@@ -177,5 +177,5 @@ func main() {
 	collectByID()
 	assignChildren()
 	sortChildren()
-printTOC()
+	buildDevhelp()
 }
