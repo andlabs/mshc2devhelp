@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"io"
 	"archive/zip"
@@ -11,7 +10,6 @@ import (
 	"unsafe"
 	"io/ioutil"
 	"code.google.com/p/go.net/html"
-	"encoding/json"
 )
 
 // #cgo LDFLAGS: -lmspack
@@ -155,9 +153,5 @@ func main() {
 	for _, cab := range os.Args[1:] {
 		parseCAB(cab, workdir)
 	}
-	b, err := json.MarshalIndent(entries, "", "\t")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%s\n", b)
+	collectByID()
 }
