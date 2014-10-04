@@ -49,5 +49,5 @@ func buildDestinationFolder(dir string) {
 		copyOne(e.MSHC, e.File, e.Dest)
 		i++
 	}
-//	copyAssets(dir)
+	copyAssets(dir)
 }

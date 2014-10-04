@@ -2,9 +2,11 @@
 package main
 
 import (
+	"os"
 	"io"
 	"io/ioutil"
 	"bytes"
+	"path/filepath"
 )
 
 type Asset struct {
@@ -29,5 +31,19 @@ func addAsset(mshcname string, name string, r io.Reader) {
 	}
 	if !bytes.Equal(assets[name].Data, a.Data) {
 		panic("duplicate differing assets " + name + ": " + assets[name].MSHC + " vs " + a.MSHC)
+	}
+}
+
+func copyAssets(dir string) {
+	for name, a := range assets {
+		f, err := os.Create(filepath.Join(dir, name))
+		if err != nil {
+			panic(err)		// TODO
+		}
+		_, err = f.Write(a.Data)
+		if err != nil {
+			panic(err)		// TODO
+		}
+		f.Close()
 	}
 }

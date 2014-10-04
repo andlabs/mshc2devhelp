@@ -1,6 +1,12 @@
 // 4 october 2014
 package main
 
+import (
+	"os"
+	"path/filepath"
+	"encoding/xml"
+)
+
 type Book struct {
 	XMLNS		string		`xml:"xmlns,attr"`
 	Title			string		`xml:"title,attr"`
@@ -32,6 +38,7 @@ var book = &Book{
 func toSub(entry *Entry) *Sub {
 	s := &Sub{
 		Name:	entry.Name,
+		Link:		filepath.Base(entry.Dest),
 	}
 	for _, e := range entry.Children {
 		s.Sub = append(s.Sub, toSub(e))
@@ -43,5 +50,19 @@ func buildDevhelp(bookname string) {
 	book.Name = bookname
 	for _, e := range toplevels {
 		book.Chapters.Sub = append(book.Chapters.Sub, toSub(e))
+	}
+
+	f, err := os.Create(filepath.Join(bookname, bookname + ".devhelp2"))
+	if err != nil {
+		panic(err)		// TODO
+	}
+	defer f.Close()
+	e := xml.NewEncoder(f)
+	e.Indent("", "\t")
+	// TODO pre-root tag noise
+	// TODO root tag should also be lowercase
+	err = e.Encode(book)
+	if err != nil {
+		panic(err)		// TODO
 	}
 }
