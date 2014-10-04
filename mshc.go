@@ -100,6 +100,9 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 					what = a.Val
 				}
 			}
+			if where != nil {
+				*where = what
+			}
 			if where == &order {
 				e.Order, err = strconv.Atoi(order)
 				if err != nil {
@@ -110,8 +113,6 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 				if err != nil {
 					panic(err)		// TODO
 				}
-			} else if where != nil {
-				*where = what
 			}
 		}
 	}
@@ -176,5 +177,5 @@ func main() {
 	collectByID()
 	assignChildren()
 	sortChildren()
-//printTOC()
+printTOC()
 }
