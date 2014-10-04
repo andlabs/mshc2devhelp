@@ -7,6 +7,7 @@ import (
 	"io"
 	"archive/zip"
 	"path/filepath"
+	"time"
 	"unsafe"
 	"io/ioutil"
 	"code.google.com/p/go.net/html"
@@ -40,6 +41,7 @@ type Entry struct {
 	ID		string
 	Parent	string
 	Order	string		// zero-based
+	Date		time.Time
 	MSHC	string
 	File		string
 }
@@ -71,6 +73,7 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 
 			var where *string
 			var what string
+			var date string
 
 			for _, a := range tok.Attr {
 				if a.Key == "name" {
@@ -85,6 +88,8 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 						where = &e.Parent
 					case "Microsoft.Help.TocOrder":
 						where = &e.Order
+					case "Microsoft.Help.TopicPublishDate":
+						where = &date
 					}
 				} else if a.Key == "content" {
 					what = a.Val
@@ -92,6 +97,13 @@ func parseEntry(r io.Reader, mshcname string, filename string) {
 			}
 			if where != nil {
 				*where = what
+			} else if where == &date {
+				var err error
+
+				e.Date, err = time.Parse(time.RFC1123, date)
+				if err != nil {
+					panic(err)		// TODO
+				}
 			}
 		}
 	}
