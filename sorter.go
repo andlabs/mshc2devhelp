@@ -3,6 +3,8 @@ package main
 
 import (
 	"sort"
+"fmt"
+"strings"
 )
 
 var byID = make(map[string]*Entry)
@@ -35,10 +37,6 @@ func assignChildren() {
 			i++
 		}
 	}
-	for _, e := range toplevels {
-		println(e.Name + " | " + e.Parent)
-		println("")
-	}
 }
 
 type sortEntries []*Entry
@@ -50,5 +48,18 @@ func (s sortEntries) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func sortChildren() {
 	for _, e := range entries {
 		sort.Sort(sortEntries(e.Children))
+	}
+}
+
+func printTOC() {
+	for _, e := range toplevels {
+		printTOCEntry(e, 0)
+	}
+}
+
+func printTOCEntry(entry *Entry, level int) {
+	fmt.Printf("%s%s\n", strings.Repeat(" ", level), entry.Name)
+	for _, e := range entry.Children {
+		printTOCEntry(e, level + 1)
 	}
 }
