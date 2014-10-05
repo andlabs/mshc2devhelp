@@ -51,6 +51,13 @@ func buildDevhelp(bookname string) {
 	for _, e := range toplevels {
 		book.Chapters.Sub = append(book.Chapters.Sub, toSub(e))
 	}
+	orphan := &Sub{
+		Name:	"Orphan Entries",
+	}
+	for _, e := range orphans {
+		orphan.Sub = append(orphan.Sub, toSub(e))
+	}
+	book.Chapters.Sub = append(book.Chapters.Sub, orphan)
 
 	f, err := os.Create(filepath.Join(bookname, bookname + ".devhelp2"))
 	if err != nil {

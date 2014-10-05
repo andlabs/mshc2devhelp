@@ -21,16 +21,25 @@ func collectByID() {
 }
 
 var toplevels []*Entry
-var toplevelID string
+var orphans []*Entry
 
 func assignChildren() {
-	toplevels = make([]*Entry, len(entries))
-	copy(toplevels, entries)
+	orphans = make([]*Entry, len(entries))
+	copy(orphans, entries)
 	i := 0
 	for _, e := range entries {
 		if parent, ok := byID[e.Parent]; ok {
 			parent.Children = append(parent.Children, e)
-			toplevels = append(toplevels[:i], toplevels[i + 1:]...)
+			orphans = append(orphans[:i], orphans[i + 1:]...)
+		} else {
+			i++
+		}
+	}
+	i = 0
+	for _, e := range orphans {
+		if e.Parent == "-1" {
+			toplevels = append(toplevels, e)
+			orphans = append(orphans[:i], orphans[i + 1:]...)
 		} else {
 			i++
 		}
